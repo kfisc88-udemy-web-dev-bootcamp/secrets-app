@@ -1,4 +1,5 @@
 //jshint esversion:6
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("express");
 const ejs = require("ejs");
@@ -17,16 +18,23 @@ mongoose.connect("mongodb://localhost:27017/secretDB", {
     useUnifiedTopology: true
 });
 
+
+// Schema for new users
 const userSchema = new mongoose.Schema({
     email: String,
     password: String
 });
 
+// Encryption key environment variable
+const secret = process.env.SECRET;
+
 // Encryption plugin
-userSchema.plugin(encrypt, {password:})
+userSchema.plugin(encrypt, {
+    secret: secret,
+    encryptedFields: ["password"]
+});
 
 const User = new mongoose.model("User", userSchema);
-
 
 // __________________________GET__________________________  \\
 
